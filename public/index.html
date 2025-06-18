@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Junior Dev API Tester</title>
+</head>
+<body>
+  <h2>Let's Test Your Junior Dev API!</h2>
+  <p>Enter your email and the URL of your deployed API below. We'll send a test request and show you what comes back.</p>
+
+  <form id="testForm">
+    <label for="emailInput">Your Email:</label><br />
+    <input type="email" id="emailInput" placeholder="you@example.com" required /><br /><br />
+
+    <label for="urlInput">Your API URL:</label><br />
+    <input type="url" id="urlInput" placeholder="https://your-api-url.vercel.app/api" required /><br /><br />
+
+    <button type="submit">Run the Test</button>
+  </form>
+
+  <h3>Here’s the response you got:</h3>
+  <pre id="responseOutput">Fill out the form above and hit 'Run the Test' to see results here.</pre>
+
+  <script>
+    const form = document.getElementById('testForm');
+    const responseOutput = document.getElementById('responseOutput');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('emailInput').value.trim();
+      const apiUrl = document.getElementById('urlInput').value.trim();
+
+      if (!email || !apiUrl) {
+        responseOutput.textContent = 'Oops! Please make sure both your email and API URL are filled in.';
+        return;
+      }
+
+      const testEndpoint = `https://yhxzjyykdsfkdrmdxgho.supabase.co/functions/v1/junior-dev?url=${encodeURIComponent(apiUrl)}&email=${encodeURIComponent(email)}`;
+
+      responseOutput.textContent = 'Testing your API... hang tight!';
+
+      try {
+        const res = await fetch(testEndpoint);
+        const data = await res.json();
+
+        responseOutput.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        responseOutput.textContent = `Uh-oh, something went wrong: ${err.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
